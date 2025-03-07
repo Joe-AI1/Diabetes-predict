@@ -5,86 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diabetes Prediction</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Corrected TensorFlow.js import -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100" style="background-color: pink;">
     <div class="card p-4 shadow-lg" style="width: 22rem;">
         <h1 class="text-center mb-4">Diabetes Prediction</h1>
         
         <form id="prediction-form">
-            <div class="mb-3">
-                <label class="form-label">BMI</label>
-                <input type="number" id="bmi" class="form-control" required>
-            </div>
+            <label>Age</label> <input type="number" id="age" required><br>
+            <label>Pregnancies</label> <input type="number" id="pregnancies" required><br>
+            <label>BMI</label> <input type="number" id="bmi" required><br>
+            <label>Glucose</label> <input type="number" id="glucose" required><br>
+            <label>Blood Pressure</label> <input type="number" id="bloodPressure" required><br>
+            <label>HbA1c</label> <input type="number" id="hbA1c" required><br>
+            <label>LDL</label> <input type="number" id="ldl" required><br>
+            <label>HDL</label> <input type="number" id="hdl" required><br>
+            <label>Triglycerides</label> <input type="number" id="triglycerides" required><br>
+            <label>Waist Circumference</label> <input type="number" id="waistCircumference" required><br>
+            <label>Hip Circumference</label> <input type="number" id="hipCircumference" required><br>
+            <label>WHR</label> <input type="number" id="whr" required><br>
+            
+            <label>Family History</label> <input type="checkbox" id="familyHistory"><br>
 
-            <div class="mb-3">
-                <label class="form-label">Glucose</label>
-                <input type="number" id="glucose" class="form-control" required>
-            </div>
+            <label>Diet Type</label>
+            <select id="dietType">
+                <option value="0">Normal</option>
+                <option value="1">Vegetarian</option>
+                <option value="2">Vegan</option>
+            </select><br>
 
-            <div class="mb-3">
-                <label class="form-label">Pregnancies</label>
-                <input type="number" id="pregnancies" class="form-control" required>
-            </div>
+            <label>Hypertension</label> <input type="checkbox" id="hypertension"><br>
+            <label>Medication Use</label> <input type="checkbox" id="medicationUse"><br>
 
-            <div class="mb-3">
-                <label class="form-label">Age</label>
-                <input type="number" id="age" class="form-control" required>
-            </div>
-
-            
-                    <div class="mb-3">
-                <label class="form-label">Blood Pressure</label>
-                <input type="number" id="bloodPressure" class="form-control" required>
-            </div>
-
-            
-                    <p class="text-center text-muted">If you put it, the accuracy will improve.</p>
-            <div class="mb-3">
-                <label class="form-label">Skin Thickness (Optional)</label>
-                <input type="number" id="skinThickness" class="form-control">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Insulin (Optional)</label>
-                <input type="number" id="insulin" class="form-control">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Diabetes Pedigree (Optional)</label>
-                <input type="text" id="diabetesGenetics" class="form-control">
-            </div>
-            
-            
-                    <button type="button" onclick="predictDiabetes()" class="btn btn-primary w-100">Predict</button>
+            <button type="button" onclick="predictDiabetes()">Predict</button>
         </form>
+        
+        <p id="result">N/A</p>
 
         <h2 class="text-center mt-4">Prediction Result:</h2>
-        <p id="result" class="text-center fw-bold mt-2">N/A</p>
     </div>
 
-    <script>
-        function predictDiabetes() {
-            let skinThickness = parseFloat(document.getElementById("skinThickness").value) || 0;
-            let insulin = parseFloat(document.getElementById("insulin").value) || 0;
-            let diabetesPedigree = document.getElementById("diabetesPedigree").value || '0.54';
-            let bmi = parseFloat(document.getElementById("bmi").value);
-            let glucose = parseFloat(document.getElementById("glucose").value);
-            let sex = document.getElementById("sex").value === "Male" ? 1 : 0;
-            let age = parseFloat(document.getElementById("age").value);
-            let bloodPressure = parseFloat(document.getElementById("bloodPressure").value);
-
-            if (isNaN(bmi) || isNaN(glucose) || isNaN(age) || isNaN(bloodPressure)) {
-                alert("Please enter valid values.");
-                return;
-            }
-
-            document.getElementById("result").innerText = "Processing...";
-            
-            setTimeout(() => {
-                document.getElementById("result").innerText = "Model integration pending...";
-            }, 1000);
-        }
-    </script>
+    <!-- Corrected JS Imports -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="pages/scripts.js"></script>
 </body>
 </html>
