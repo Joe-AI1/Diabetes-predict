@@ -3,7 +3,7 @@ let model;
 // Load TensorFlow.js model
 async function loadModel() {
     try {
-        model = await tf.loadLayersModel('pages/model/model.json');
+        model = await tf.loadLayersModel('model/model.json');
         console.log("Model loaded successfully!");
     } catch (error) {
         console.error("Error loading the model:", error);
