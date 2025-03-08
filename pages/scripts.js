@@ -3,17 +3,23 @@ let model;
 // Load TensorFlow.js model
 async function loadModel() {
     try {
+        console.log("🔍 Attempting to load model from: pages/model/model.json");
         model = await tf.loadLayersModel('pages/model/model.json');
-        console.log("Model loaded successfully!");
+        console.log("✅ Model loaded successfully!");
+
+        // Log input shape to check if it's properly defined
+        console.log("📏 Model Input Shape:", model.inputs[0].shape);
+
     } catch (error) {
-        console.error("Error loading the model:", error);
+        console.error("❌ Error loading the model:", error);
     }
 }
 
-// Load the model when the page loads
+// Load model when page loads
 window.onload = async () => {
     await loadModel();
 };
+
 
 async function predictDiabetes() {
     if (!model) {
@@ -59,6 +65,14 @@ async function predictDiabetes() {
     let prediction = model.predict(inputTensor);
     let result = await prediction.data(); // Extract prediction result as an array
 
+    console.log("🔍 Model Prediction Output:", result);
+
+    // Since model output has 2 units, we take the second probability for diabetes detection
+    let diabetesProbability = result[1]; // Model predicts probability of class 1 (diabetes)
+
     // Display result
-    document.getElementById("result").innerText = result[0] > 0.5 ? "Diabetes Detected" : "No Diabetes";
+    document.getElementById("result").innerText = diabetesProbability > 0.5 
+        ? `Diabetes Detected (Risk Score: ${(diabetesProbability * 100).toFixed(2)}%)` 
+        : `No Diabetes (Risk Score: ${(diabetesProbability * 100).toFixed(2)}%)`;
 }
+
