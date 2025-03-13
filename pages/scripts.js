@@ -7,23 +7,29 @@ async function loadModel() {
         model = await tf.loadLayersModel('pages/model/model.json');
         console.log("✅ Model loaded successfully!");
 
-        // Log input shape to check if it's properly defined
-        console.log("📏 Model Input Shape:", model.inputs[0].shape);
+        // Debug: Check if input shape is recognized
+        if (model.inputs && model.inputs[0].shape) {
+            console.log("📏 Model Input Shape:", model.inputs[0].shape);
+        } else {
+            console.warn("⚠️ Model is missing input shape, setting it manually.");
+            model.build([null, 16]);  // Force correct shape
+        }
 
     } catch (error) {
         console.error("❌ Error loading the model:", error);
     }
 }
 
-// Load model when page loads
+// Load model when the page loads
 window.onload = async () => {
     await loadModel();
 };
 
 
+
 async function predictDiabetes() {
     if (!model) {
-        alert("Model is still loading, please wait...");
+        alert("⚠️ Model is still loading, please wait...");
         return;
     }
 
@@ -49,7 +55,7 @@ async function predictDiabetes() {
     if (isNaN(age) || isNaN(pregnancies) || isNaN(bmi) || isNaN(glucose) || isNaN(bloodPressure) || 
         isNaN(hbA1c) || isNaN(ldl) || isNaN(hdl) || isNaN(triglycerides) || isNaN(waistCircumference) || 
         isNaN(hipCircumference) || isNaN(whr) || isNaN(dietType)) {
-        alert("Please enter valid numerical values for all required fields.");
+        alert("⚠️ Please enter valid numerical values for all required fields.");
         return;
     }
 
@@ -61,18 +67,22 @@ async function predictDiabetes() {
         waistCircumference, hipCircumference, whr, familyHistory, dietType, hypertension, medicationUse
     ]], [1, 16]);
 
-    // Make a prediction
-    let prediction = model.predict(inputTensor);
-    let result = await prediction.data(); // Extract prediction result as an array
+    try {
+        // Make a prediction
+        let prediction = await model.predict(inputTensor);
+        let result = await prediction.data(); // Extract prediction result as an array
 
-    console.log("🔍 Model Prediction Output:", result);
+        console.log("🔍 Model Prediction Output:", result);
 
-    // Since model output has 2 units, we take the second probability for diabetes detection
-    let diabetesProbability = result[1]; // Model predicts probability of class 1 (diabetes)
+        // If the model outputs 2 values, we take the probability of diabetes (class 1)
+        let diabetesProbability = result.length === 2 ? result[1] : result[0];
 
-    // Display result
-    document.getElementById("result").innerText = diabetesProbability > 0.5 
-        ? `Diabetes Detected (Risk Score: ${(diabetesProbability * 100).toFixed(2)}%)` 
-        : `No Diabetes (Risk Score: ${(diabetesProbability * 100).toFixed(2)}%)`;
+        // Display result
+        document.getElementById("result").innerText = diabetesProbability > 0.5 
+            ? `🛑 Diabetes Detected (Risk Score: ${(diabetesProbability * 100).toFixed(2)}%)` 
+            : `✅ No Diabetes (Risk Score: ${(diabetesProbability * 100).toFixed(2)}%)`;
+    } catch (error) {
+        console.error("❌ Error during prediction:", error);
+        document.getElementById("result").innerText = "⚠️ Prediction Error!";
+    }
 }
-
